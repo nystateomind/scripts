@@ -53,9 +53,17 @@ postmap /etc/postfix/sasl_passwd
 # Restart postfix
 systemctl restart postfix
 
+# Add your real email as root's alias
+echo "root: ${GMAIL_USER}" >> /etc/aliases
+newaliases
+
 echo "Postfix configured for Gmail relay"
 if echo 'test' | mail -s 'Postfix configured for Gmail relay' -- "${GMAIL_USER}"; then
     echo "Test email sent to ${GMAIL_USER}"
 else
     echo "Failed to send test email" >&2
 fi
+
+# Test alias
+echo "test from proxmox" | mail -s "proxmox alias test" root
+
